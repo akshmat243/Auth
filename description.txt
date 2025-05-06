@@ -8,3 +8,5 @@ User_detail             ----------------            login and register through u
 
 user_otp                -----------------           login and register through username | email | mobile --- password | otp
 
+
+https://github.com/akshmat243/Auth
