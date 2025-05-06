@@ -1,0 +1,7 @@
+<h1>Welcome to otp verification Page</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button type="submit">verify</button>
+</form>

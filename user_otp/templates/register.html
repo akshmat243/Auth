@@ -1,0 +1,19 @@
+<h1>Welcome to Register Website</h1>
+
+<p>Please fill out the form below to create an account.</p>
+<form method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+        <p>
+            {{ field.label_tag }}
+            {{ field }}
+            
+            {% for error in field.errors %}
+                <span style="color:red;">{{ error }}</span><br>
+            {% endfor %}
+        </p>
+    {% endfor %}
+    <button type="submit">Register</button>
+</form>
+Already have a account.
+<a href="{%  url 'login' %}">Login</a>

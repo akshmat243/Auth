@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        #send-otp-btn, #otp-input-div, #verify-otp-btn {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Login Form</h2>
+
+<form id="login-form" method="POST">
+    {% csrf_token %}
+    <label for="identifier">Username / Email / Mobile:</label><br>
+    <input type="text" id="identifier" name="{{form.identifier.name}}"><br><br>
+
+    <label>Login Method:</label><br>
+    <input type="radio" id="password-login" name="{{ form.login_type.name}}" value="password" checked>
+    <label for="password-login">Password</label><br>
+
+    <input type="radio" id="otp-login" name="{{ form.login_type.name}}" value="otp">
+    <label for="otp-login">OTP</label><br><br>
+
+    <div id="password-div">
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="{{form.password.name}}"><br><br>
+    </div>
+
+    <button type="submit" id="login-btn">Login</button>
+    <button type="button" id="send-otp-btn">Send OTP</button><br><br>
+
+    <div id="otp-input-div">
+        <label for="otp">Enter OTP:</label><br>
+        <input type="text" id="otp" name="{{form.otp.name}}"><br><br>
+    </div>
+
+    <button type="submit" id="verify-otp-btn">Verify OTP</button>
+
+</form>
+Don't have an account? 
+<a href="{%  url 'register' %}">Click Here</a>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordDiv = document.getElementById('password-div');
+    const loginBtn = document.getElementById('login-btn');
+    const sendOtpBtn = document.getElementById('send-otp-btn');
+    const otpInputDiv = document.getElementById('otp-input-div');
+    const verifyOtpBtn = document.getElementById('verify-otp-btn');
+
+    const passwordRadio = document.getElementById('password-login');
+    const otpRadio = document.getElementById('otp-login');
+
+    // When user switches between Password or OTP login
+    function updateForm() {
+        if (passwordRadio.checked) {
+            passwordDiv.style.display = 'block';
+            loginBtn.style.display = 'inline-block';
+            sendOtpBtn.style.display = 'none';
+            otpInputDiv.style.display = 'none';
+            verifyOtpBtn.style.display = 'none';
+        } else if (otpRadio.checked) {
+            passwordDiv.style.display = 'none';
+            loginBtn.style.display = 'none';
+            sendOtpBtn.style.display = 'inline-block';
+            otpInputDiv.style.display = 'none';
+            verifyOtpBtn.style.display = 'none';
+        }
+    }
+
+    passwordRadio.addEventListener('change', updateForm);
+    otpRadio.addEventListener('change', updateForm);
+
+    sendOtpBtn.addEventListener('click', function() {
+        const identifier = document.getElementById('identifier').value;
+    
+        // 1. Send AJAX request to backend to send OTP
+        fetch("{% url 'send_otp' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: JSON.stringify({ identifier: identifier })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("OTP sent successfully!");
+                sendOtpBtn.style.display = 'none';
+                otpInputDiv.style.display = 'block';
+                verifyOtpBtn.style.display = 'inline-block';
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+    
+
+    updateForm(); // Set initial view when page loads
+});
+</script>
+
+</body>
+</html>

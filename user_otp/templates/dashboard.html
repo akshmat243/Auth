@@ -1,0 +1,11 @@
+
+{% if user.is_authenticated%}
+    <h1>Welcome to Dashboard Website</h1>
+    Welcome back, {{ user.username }}!
+    <a href="/logout">Logout</a>
+{% else %}
+    <h1>Welcome to Index Website</h1>
+    Please log in to access your account.
+    <a href="{% url 'login' %}">Login</a> ||
+    <a href="{%  url 'register' %}">Register</a>
+{% endif %}

@@ -1,0 +1,10 @@
+.venv                   ---------------            virtual environment          .venv\Scripts\activate
+
+django_user_auth         ---------------            login and register through username password
+
+
+User_detail             ----------------            login and register through username | email | mobile --- password
+
+
+user_otp                -----------------           login and register through username | email | mobile --- password | otp
+
